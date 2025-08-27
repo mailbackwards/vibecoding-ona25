@@ -1,0 +1,359 @@
+/**
+ * ProPublica Nonprofit Explorer API helpers for Google Sheets
+ * Org endpoint: https://projects.propublica.org/nonprofits/api/v2/organizations/{EIN}.json
+ *
+ * Sheet layout (Latest filing writer):
+ *   A = EIN (input)
+ *   B = Name
+ *   C = City
+ *   D = State
+ *   E = Ruling Date (YYYY-MM or YYYY-MM-DD when available)
+ *   F = Latest 990 Tax Year
+ *   G = Total Contributions (totcntrbgfts)
+ *   H = Total Revenue (totrevenue)
+ *   I = Total Expenses (totfuncexpns)
+ *   J = Assets End (totassetsend)
+ *   K = Comp of Current Officers (compnsatncurrofcr)
+ *   L = Other Salary & Wages (othrsalwages)
+ *   M = PDF URL (latest)
+ */
+
+const PROPUBLICA_NPX_BASE = 'https://projects.propublica.org/nonprofits/api/v2/organizations/';
+const CACHE_TTL_SECONDS = 6 * 60 * 60;
+const CACHE_VERSION = 'v3'; // bump to invalidate older cache shapes
+
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('990 Tools')
+    .addItem('Fill (Latest Filing) from EIN column', 'fillLatestFromEinColumn')
+    .addItem('Append Filings Since 2020 to new sheet', 'appendFilingsSince2020Sheet')
+    .addSeparator()
+    .addItem('Force Refresh Selected Rows (ignore cache)', 'forceRefreshSelectedRows')
+    .addToUi();
+}
+
+/**
+ * Batch writer: latest filing only → writes columns B..M
+ */
+function fillLatestFromEinColumn() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const opts = {
+    einColumn: 'A',
+    startRow: 2,
+    outCols: {
+      name: 'B',
+      city: 'C',
+      state: 'D',
+      ruling_date: 'E',
+      year: 'F',
+      contributions: 'G',
+      revenue: 'H',
+      expenses: 'I',
+      assets_end: 'J',
+      comp_officers: 'K',
+      other_salary: 'L',
+      pdf_url: 'M'
+    }
+  };
+
+  const lastRow = sheet.getLastRow();
+  if (lastRow < opts.startRow) return;
+
+  const einRange = sheet.getRange(`${opts.einColumn}${opts.startRow}:${opts.einColumn}${lastRow}`);
+  const eins = einRange.getValues().map(r => sanitizeEin(r[0]));
+
+  const rows = eins.map(ein => {
+    if (!ein) return blankLatestRow();
+    try {
+      const api = fetchOrg_(ein); // full response (cached)
+      const orgName = (api?.organization?.name || api?.organization?.sub_name || '').toString();
+      const city = api?.organization?.city || '';
+      const state = api?.organization?.state || '';
+      const ruling = formatRulingDate_(api?.organization?.ruling_date);
+
+      const latest = pickLatestFiling_(api?.filings_with_data || []);
+      if (!latest) return {
+        ...blankLatestRow(),
+        name: orgName, city, state, ruling_date: ruling
+      };
+
+      return {
+        name: orgName,
+        city,
+        state,
+        ruling_date: ruling,
+        year: numOrBlank_(latest.tax_prd_yr),
+        contributions: numOrBlank_(latest.totcntrbgfts),
+        revenue: numOrBlank_(firstDefined_(latest.totrevenue, latest.totrevenue)),
+        expenses: numOrBlank_(firstDefined_(latest.totfuncexpns, latest.totexpns)),
+        assets_end: numOrBlank_(latest.totassetsend),
+        comp_officers: numOrBlank_(firstDefined_(latest.compnsatncurrofcr, latest.compnsationcurrofcr)), // handle alt spellings
+        other_salary: numOrBlank_(latest.othrsalwages),
+        pdf_url: latest.pdf_url || ''
+      };
+    } catch (e) {
+      return {
+        name: '#ERROR',
+        city: '',
+        state: '',
+        ruling_date: String(e && e.message ? e.message : e),
+        year: '',
+        contributions: '',
+        revenue: '',
+        expenses: '',
+        assets_end: '',
+        comp_officers: '',
+        other_salary: '',
+        pdf_url: ''
+      };
+    }
+  });
+
+  // Write each column in a single batch call
+  const r0 = opts.startRow, rN = lastRow;
+  writeCol_(sheet, opts.outCols.name,   r0, rN, rows.map(r => [r.name]));
+  writeCol_(sheet, opts.outCols.city,   r0, rN, rows.map(r => [r.city]));
+  writeCol_(sheet, opts.outCols.state,  r0, rN, rows.map(r => [r.state]));
+  writeCol_(sheet, opts.outCols.ruling_date, r0, rN, rows.map(r => [r.ruling_date]));
+  writeCol_(sheet, opts.outCols.year,   r0, rN, rows.map(r => [r.year]));
+  writeCol_(sheet, opts.outCols.contributions, r0, rN, rows.map(r => [r.contributions]));
+  writeCol_(sheet, opts.outCols.revenue, r0, rN, rows.map(r => [r.revenue]));
+  writeCol_(sheet, opts.outCols.expenses, r0, rN, rows.map(r => [r.expenses]));
+  writeCol_(sheet, opts.outCols.assets_end, r0, rN, rows.map(r => [r.assets_end]));
+  writeCol_(sheet, opts.outCols.comp_officers, r0, rN, rows.map(r => [r.comp_officers]));
+  writeCol_(sheet, opts.outCols.other_salary, r0, rN, rows.map(r => [r.other_salary]));
+  writeCol_(sheet, opts.outCols.pdf_url, r0, rN, rows.map(r => [r.pdf_url]));
+}
+
+/**
+ * Batch writer: create (or clear) a sheet "990 Filings since 2020"
+ * and append one row per EIN per filing (tax_prd_yr >= 2020).
+ */
+function appendFilingsSince2020Sheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const src = ss.getActiveSheet();
+  const eins = (function() {
+    const startRow = 2, einCol = 'A';
+    const lastRow = src.getLastRow();
+    if (lastRow < startRow) return [];
+    const einRange = src.getRange(`${einCol}${startRow}:${einCol}${lastRow}`);
+    return einRange.getValues().map(r => sanitizeEin(r[0])).filter(Boolean);
+  })();
+
+  const outName = '990 Filings since 2020';
+  let out = ss.getSheetByName(outName);
+  if (!out) out = ss.insertSheet(outName);
+  out.clear();
+
+  const headers = [
+    'EIN','Name','City','State','Tax Year',
+    'Total Contributions','Total Revenue','Total Expenses','Assets End',
+    'Comp Current Officers','Other Salary & Wages','PDF URL'
+  ];
+  out.getRange(1,1,1,headers.length).setValues([headers]);
+
+  const rows = [];
+  eins.forEach(ein => {
+    try {
+      const api = fetchOrg_(ein);
+      const name = (api?.organization?.name || api?.organization?.sub_name || '').toString();
+      const city = api?.organization?.city || '';
+      const state = api?.organization?.state || '';
+      const filings = (api?.filings_with_data || []).filter(f => Number(f.tax_prd_yr) >= 2020);
+
+      // Sort ascending by year (or descend—your call)
+      filings.sort((a,b) => Number(a.tax_prd_yr) - Number(b.tax_prd_yr));
+
+      filings.forEach(f => {
+        rows.push([
+          ein,
+          name,
+          city,
+          state,
+          numOrBlank_(f.tax_prd_yr),
+          numOrBlank_(f.totcntrbgfts),
+          numOrBlank_(firstDefined_(f.totrevenue, f.totrevenue)), // leniency; space typo safeguard removed below
+          numOrBlank_(firstDefined_(f.totfuncexpns, f.totexpns)),
+          numOrBlank_(f.totassetsend),
+          numOrBlank_(firstDefined_(f.compnsatncurrofcr, f.compnsationcurrofcr)),
+          numOrBlank_(f.othrsalwages),
+          f.pdf_url || ''
+        ]);
+      });
+    } catch (e) {
+      // If a single EIN fails, add an error row to keep track
+      rows.push([ein, '#ERROR', '', '', '', '', '', '', '', '', '', String(e && e.message ? e.message : e)]);
+    }
+  });
+
+  if (rows.length) {
+    out.getRange(2,1,rows.length,headers.length).setValues(rows);
+    out.autoResizeColumns(1, headers.length);
+  }
+}
+
+/**
+ * Force refresh selected rows (ignores cache). Select any cells that include EINs in column A.
+ */
+function forceRefreshSelectedRows() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const range = sheet.getActiveRange();
+  const startRow = range.getRow();
+  const numRows = range.getNumRows();
+  for (let i = 0; i < numRows; i++) {
+    const row = startRow + i;
+    const ein = sanitizeEin(sheet.getRange(row, 1).getValue()); // column A
+    if (!ein) continue;
+    // delete any cached entries
+    const cache = CacheService.getScriptCache();
+    cache.removeAll([cacheKey_(ein), cacheKey_(ein, true)]);
+  }
+  SpreadsheetApp.getUi().alert('Cache cleared for selected rows. Re-run the fill to refresh.');
+}
+
+/**
+ * Custom function: latest snapshot (returns a 1x12 row to spill).
+ * Usage: =GET_990_INFO(A2)
+ */
+function GET_990_INFO(einInput) {
+  const ein = sanitizeEin(einInput);
+  if (!ein) return [['','','','','','','','','','','','']];
+  const api = fetchOrg_(ein);
+  const orgName = (api?.organization?.name || api?.organization?.sub_name || '').toString();
+  const city = api?.organization?.city || '';
+  const state = api?.organization?.state || '';
+  const ruling = formatRulingDate_(api?.organization?.ruling_date);
+  const latest = pickLatestFiling_(api?.filings_with_data || []);
+  if (!latest) {
+    return [[orgName, city, state, ruling, '', '', '', '', '', '', '', '']];
+  }
+  return [[
+    orgName,
+    city,
+    state,
+    ruling,
+    numOrBlank_(latest.tax_prd_yr),
+    numOrBlank_(latest.totcntrbgfts),
+    numOrBlank_(firstDefined_(latest.totrevenue, latest.totrevenue)), // leniency; space typo safeguard removed below
+    numOrBlank_(firstDefined_(latest.totfuncexpns, latest.totexpns)),
+    numOrBlank_(latest.totassetsend),
+    numOrBlank_(firstDefined_(latest.compnsatncurrofcr, latest.compnsationcurrofcr)),
+    numOrBlank_(latest.othrsalwages),
+    latest.pdf_url || ''
+  ]];
+}
+
+/**
+ * Custom function: all filings since 2020 (spills N rows x 12 cols).
+ * Usage: =GET_990_FILINGS_SINCE_2020(A2)
+ */
+function GET_990_FILINGS_SINCE_2020(einInput) {
+  const ein = sanitizeEin(einInput);
+  if (!ein) return [['']];
+  const api = fetchOrg_(ein);
+  const name = (api?.organization?.name || api?.organization?.sub_name || '').toString();
+  const city = api?.organization?.city || '';
+  const state = api?.organization?.state || '';
+  const filings = (api?.filings_with_data || []).filter(f => Number(f.tax_prd_yr) >= 2020)
+    .sort((a,b) => Number(a.tax_prd_yr) - Number(b.tax_prd_yr));
+
+  const rows = filings.map(f => ([
+    ein, name, city, state,
+    numOrBlank_(f.tax_prd_yr),
+    numOrBlank_(f.totcntrbgfts),
+    numOrBlank_(firstDefined_(f.totrevenue, f.totrevenue)),
+    numOrBlank_(firstDefined_(f.totfuncexpns, f.totexpns)),
+    numOrBlank_(f.totassetsend),
+    numOrBlank_(firstDefined_(f.compnsatncurrofcr, f.compnsationcurrofcr)),
+    numOrBlank_(f.othrsalwages),
+    f.pdf_url || ''
+  ]));
+
+  // If no rows, return a single blank row so Sheets shows something
+  return rows.length ? rows : [['']];
+}
+
+/* -------------------- Core helpers -------------------- */
+
+/** Fetch the full org payload (with cache). */
+function fetchOrg_(ein, noCache) {
+  const cache = CacheService.getScriptCache();
+  const key = cacheKey_(ein, noCache);
+  if (!noCache) {
+    const cached = cache.get(key);
+    if (cached) return JSON.parse(cached);
+  }
+
+  const url = `${PROPUBLICA_NPX_BASE}${ein}.json`;
+  const res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  const code = res.getResponseCode();
+  if (code === 404) throw new Error(`EIN not found (${ein})`);
+  if (code !== 200) throw new Error(`API error ${code}`);
+
+  const data = JSON.parse(res.getContentText());
+  cache.put(key, JSON.stringify(data), CACHE_TTL_SECONDS);
+  return data;
+}
+
+/** Build cache key (supports "noCache" alt key for clearing). */
+function cacheKey_(ein, alt) {
+  return `npX:${CACHE_VERSION}:${alt ? 'nocache' : 'full'}:${ein}`;
+}
+
+/** Choose latest filing by tax_prd_yr. */
+function pickLatestFiling_(filings) {
+  let latest = null;
+  for (const f of filings) {
+    const yr = Number(f?.tax_prd_yr);
+    if (!yr) continue;
+    if (!latest || yr > Number(latest.tax_prd_yr)) latest = f;
+  }
+  return latest;
+}
+
+/** Format IRS ruling_date into a nice string when possible. */
+function formatRulingDate_(raw) {
+  if (!raw) return '';
+  const s = String(raw).trim();
+  // Common formats: 'YYYYMM', 'YYYYMMDD', 'YYYY' — do best-effort pretty
+  if (/^\d{8}$/.test(s)) return `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
+  if (/^\d{6}$/.test(s)) return `${s.slice(0,4)}-${s.slice(4,6)}`;
+  if (/^\d{4}$/.test(s)) return s;
+  return s; // fall back to raw
+}
+
+/** Normalize values */
+function numOrBlank_(v) {
+  if (v == null || v === '') return '';
+  const n = Number(v);
+  return isNaN(n) ? '' : n;
+}
+
+/** Return the first non-null/undefined argument. */
+function firstDefined_(...arr) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] !== undefined && arr[i] !== null) return arr[i];
+  }
+  return undefined;
+}
+
+/** Digits-only EIN, must be 9 digits. */
+function sanitizeEin(val) {
+  if (val == null) return '';
+  const s = String(val).replace(/\D/g, '').trim();
+  return s.length === 9 ? s : '';
+}
+
+/** Make a blank result record for the latest-only writer. */
+function blankLatestRow() {
+  return {
+    name: '', city: '', state: '', ruling_date: '',
+    year: '', contributions: '', revenue: '', expenses: '',
+    assets_end: '', comp_officers: '', other_salary: '', pdf_url: ''
+  };
+}
+
+/** Small util to write a whole column block */
+function writeCol_(sheet, colLetter, startRow, lastRow, values2d) {
+  sheet.getRange(`${colLetter}${startRow}:${colLetter}${lastRow}`).setValues(values2d);
+}

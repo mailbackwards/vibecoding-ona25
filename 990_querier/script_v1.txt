@@ -1,0 +1,141 @@
+/**
+ * ProPublica Nonprofit Explorer API → Org Name, Latest 990 year + Total Contributions
+ *
+ * How to use (batch):
+ *   - Put EINs in column A (one per row, hyphens/spacing OK).
+ *   - Open Extensions → Apps Script, paste this code, Save.
+ *   - Back in the Sheet: Extensions → 990 Tools → Fill from EIN column
+ *     (writes Name to col B, year to col C, contributions to col D).
+ */
+
+const PROPUBLICA_NPX_BASE = 'https://projects.propublica.org/nonprofits/api/v2/organizations/';
+const CACHE_TTL_SECONDS = 6 * 60 * 60; // cache EIN lookups for 6 hours
+
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('990 Tools')
+    .addItem('Fill from EIN column', 'fill990FromEinColumn')
+    .addToUi();
+}
+
+function fill990FromEinColumn() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getActiveSheet();
+
+  const options = {
+    einColumn: 'A',        // EINs
+    startRow: 2,           // skip header
+    outNameColumn: 'B',    // write Org Name
+    outYearColumn: 'C',    // write latest 990 tax year
+    outTotalColumn: 'D'    // write total contributions
+  };
+
+  const lastRow = sheet.getLastRow();
+  if (lastRow < options.startRow) return;
+
+  const einRange = sheet.getRange(`${options.einColumn}${options.startRow}:${options.einColumn}${lastRow}`);
+  const eins = einRange.getValues().map(r => sanitizeEin(r[0]));
+  const results = [];
+
+  for (let i = 0; i < eins.length; i++) {
+    const ein = eins[i];
+    if (!ein) {
+      results.push({name:'', year:'', total:''});
+      continue;
+    }
+    try {
+      const info = getLatest990FromApi_(ein);
+      results.push({
+        name: info?.name ?? '',
+        year: info?.year ?? '',
+        total: info?.total_contributions ?? ''
+      });
+    } catch (err) {
+      results.push({name:'#ERROR', year:'#ERROR', total:String(err.message || err)});
+    }
+    Utilities.sleep(60); // throttle
+  }
+
+  sheet.getRange(`${options.outNameColumn}${options.startRow}:${options.outNameColumn}${lastRow}`)
+       .setValues(results.map(r => [r.name]));
+  sheet.getRange(`${options.outYearColumn}${options.startRow}:${options.outYearColumn}${lastRow}`)
+       .setValues(results.map(r => [r.year]));
+  sheet.getRange(`${options.outTotalColumn}${options.startRow}:${options.outTotalColumn}${lastRow}`)
+       .setValues(results.map(r => [r.total]));
+}
+
+/**
+ * Custom function: returns {name, year, total_contributions} in one row.
+ * Usage: =GET_990_INFO(A2)
+ */
+function GET_990_INFO(einInput) {
+  const ein = sanitizeEin(einInput);
+  if (!ein) return ['','',''];
+  const info = getLatest990FromApi_(ein);
+  return [[info?.name ?? '', info?.year ?? '', info?.total_contributions ?? '']];
+}
+
+function GET_990_NAME(einInput) {
+  const ein = sanitizeEin(einInput);
+  if (!ein) return '';
+  const info = getLatest990FromApi_(ein);
+  return info?.name ?? '';
+}
+
+function GET_990_YEAR(einInput) {
+  const ein = sanitizeEin(einInput);
+  if (!ein) return '';
+  const info = getLatest990FromApi_(ein);
+  return info?.year ?? '';
+}
+
+function GET_990_TOTAL(einInput) {
+  const ein = sanitizeEin(einInput);
+  if (!ein) return '';
+  const info = getLatest990FromApi_(ein);
+  return info?.total_contributions ?? '';
+}
+
+/**
+ * Core fetcher with simple caching.
+ */
+function getLatest990FromApi_(ein) {
+  const cache = CacheService.getScriptCache();
+  const cacheKey = `npX:${ein}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return JSON.parse(cached);
+
+  const url = `${PROPUBLICA_NPX_BASE}${ein}.json`;
+  const res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  const code = res.getResponseCode();
+  if (code === 404) throw new Error(`EIN not found (${ein})`);
+  if (code !== 200) throw new Error(`API error ${code}`);
+
+  const data = JSON.parse(res.getContentText());
+  const orgName = data?.organization?.name || '';
+
+  const filings = Array.isArray(data?.filings_with_data) ? data.filings_with_data : [];
+  if (!filings.length) throw new Error(`No filings_with_data for EIN ${ein}`);
+
+  let latest = null;
+  for (const f of filings) {
+    if (f?.tax_prd_yr == null) continue;
+    if (!latest || Number(f.tax_prd_yr) > Number(latest.tax_prd_yr)) latest = f;
+  }
+  if (!latest) throw new Error(`Could not determine latest 990 year for ${ein}`);
+
+  const total = latest.totcntrbgfts != null ? Number(latest.totcntrbgfts) : null;
+  const result = { name: orgName, year: Number(latest.tax_prd_yr), total_contributions: total };
+
+  cache.put(cacheKey, JSON.stringify(result), CACHE_TTL_SECONDS);
+  return result;
+}
+
+/**
+ * Normalize an EIN (digits only, 9 total).
+ */
+function sanitizeEin(val) {
+  if (val == null) return '';
+  const s = String(val).replace(/\D/g, '').trim();
+  return s.length === 9 ? s : '';
+}
