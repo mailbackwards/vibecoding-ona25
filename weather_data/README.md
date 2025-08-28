@@ -19,3 +19,8 @@ I generated 3 CSVs, the historical data, the highest wind and total storms over 
 
 We can build a lot of stuff with this
 
+
+Added this story to tell more narrative 
+# https://ready.nola.gov/hazard-mitigation/hazards/tropical-cyclones/
+then this report from NPR from August 24
+# https://www.npr.org/2025/08/24/nx-s1-5469888/hurricane-katrina-20-years-new-orleans
