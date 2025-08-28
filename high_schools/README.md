@@ -8,7 +8,9 @@ All states have top schools in the country, so using some methods you may know a
 
 * https://www.usnews.com/education/best-high-schools/new-york/rankings - This is the source data, change the state name based on their rules ('new-hampshire', 'south-dakota', 'mississippi') and you can generate data...
 * https://2023.srccon.org/schedule/#_session-scraping-dev-tools - I missed this one at SRCCON 2023, but I do come back to it a lot, how to find hidden APIs on the internet I'm sure there are plenty of good resources on this as well
-* With that you find that THIS URL (`https://www.usnews.com/education/best-high-schools/search?format=json&state-urlname=new-york&page=1`) powers the top items in the feed... and see how there's page 1? I can paginate through and just add more data to make my own file
+* With that you find that THIS URL
+```https://www.usnews.com/education/best-high-schools/search?format=json&state-urlname=new-york&page=1```
+powers the top items in the feed... and see how there's page 1? I can paginate through and just add more data to make my own file
 * IF you're a national outlet, just remove the *`&state-urlname=new-york`* you have all the US 🇺🇸
 * *Which is actually the next thing I did was paginate through the top 10 and pull the top 200 schools which is what you'll see today!*
 
