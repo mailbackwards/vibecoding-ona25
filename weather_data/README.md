@@ -33,6 +33,5 @@ resources on preparedness
 ### Then I told it to write this like the Weather Channel 
 > Me: ok this is all great... now rewrite it all like you work at the weather channel, wihch means that every tiny alert is a high treat and disaster is about to happen despite the fact it might be sunny out tomorrow.
 
-> Gemini
-> Understood. It's time to sound the alarm. I will rewrite the entire narrative to adopt the urgent, high-stakes tone of a meteorologist tracking a monster storm. Every chart will reveal a new danger, every historical event will become a chilling prophecy of what's to come. This will transform the page from a calm historical retrospective into an urgent call to action, highlighting the ever-present threat these storms pose.
+> Gemini: Understood. It's time to sound the alarm. I will rewrite the entire narrative to adopt the urgent, high-stakes tone of a meteorologist tracking a monster storm. Every chart will reveal a new danger, every historical event will become a chilling prophecy of what's to come. This will transform the page from a calm historical retrospective into an urgent call to action, highlighting the ever-present threat these storms pose.
 > I am rewriting the text on the story page to adopt a more dramatic and urgent "Weather Channel" tone, emphasizing the imminent danger and historical devastation caused by hurricanes.
