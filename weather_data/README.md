@@ -7,14 +7,12 @@ Then I found this study of Louisiana hurricane history and thought this might be
 
 By all means read this 70 page paper, but lets take this and try to make a story out of it.
 
+**NOAA Climatology Report - Hurricanes in Louisiana**
 https://www.weather.gov/media/lch/events/lahurricanehistory.pdf
 
+*Think about this:* 5 years ago you would have to read this and then write a story, maybe an interview or two, find some other sources. *Now* we can try to create something out of this that serves our users using LLMs.
 
-And so to get the data, yes I punched it into ChatGPT 🥴 to generate a CSV
-
-https://chatgpt.com/share/68b0770f-569c-800a-a1d6-5a02bd35180d
-
-I generated 3 CSVs, the historical data, the highest wind and total storms over decades. 
+To get the data from this PDF, I punched it into ChatGPT to generate three CSVs, one for the historical data, and then the highest wind totals, storms by decades because they seemed the most useful. You could go a step further and ask an LLM to read this data and try to pull all the measurements (rainfall inches, wind speeds) out of it by finding dates, times, measurements and that should also work.
 
 ## Now Let's Vibe Code!
 
