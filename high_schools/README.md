@@ -4,7 +4,7 @@ This was an idea to show off how you can create new and unique experiences, doin
 
 All states have top schools in the country, so using some methods you may know about, plus some vibe coding, you can build this experience.
 
-# Resources that inspire this that are worth knowing about
+## Resources that inspire this that are worth knowing about
 
 * https://www.usnews.com/education/best-high-schools/new-york/rankings - This is the source data, change the state name based on their rules ('new-hampshire', 'south-dakota', 'mississippi') and you can generate data...
 * https://2023.srccon.org/schedule/#_session-scraping-dev-tools - I missed this one at SRCCON 2023, but I do come back to it a lot, how to find hidden APIs on the internet I'm sure there are plenty of good resources on this as well

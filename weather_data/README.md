@@ -35,3 +35,6 @@ resources on preparedness
 
 > Gemini: Understood. It's time to sound the alarm. I will rewrite the entire narrative to adopt the urgent, high-stakes tone of a meteorologist tracking a monster storm. Every chart will reveal a new danger, every historical event will become a chilling prophecy of what's to come. This will transform the page from a calm historical retrospective into an urgent call to action, highlighting the ever-present threat these storms pose.
 > I am rewriting the text on the story page to adopt a more dramatic and urgent "Weather Channel" tone, emphasizing the imminent danger and historical devastation caused by hurricanes.
+
+![alt text](1_before_weather_channel_prompt.png "Logo Title Text 1")
+![alt text](2_weather_channel_prompt.png "Logo Title Text 1")
