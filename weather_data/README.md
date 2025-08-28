@@ -5,7 +5,8 @@ At first I wanted to reflect some smilar projects I've done in the past
 
 Then I found this study of Louisiana hurricane history and thought this might be more relevant since (A) we are in New Orleans (B) the conference dates are the exact peak of Hurricane Season.
 
-By all means read this 70 page paper, but lets 
+By all means read this 70 page paper, but lets take this and try to make a story out of it.
+
 https://www.weather.gov/media/lch/events/lahurricanehistory.pdf
 
 
