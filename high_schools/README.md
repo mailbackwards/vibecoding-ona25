@@ -12,7 +12,7 @@ All states have top schools in the country, so using some methods you may know a
 ```https://www.usnews.com/education/best-high-schools/search?format=json&state-urlname=new-york&page=1```
 powers the top items in the feed... and see how there's page 1? I can paginate through and just add more data to make my own file
 * IF you're a national outlet, just remove the *`&state-urlname=new-york`* you have all the US 🇺🇸
-* *Which is actually the next thing I did was paginate through the top 10 and pull the top 200 schools which is what you'll see today!*
+* *Which is actually the next thing I did was paginate through the top 10 and pull the top 200 schools which is what you'll see today!* (How I did this was very hack-y, because originally I was going to write a scraper to do it, but this page proved to be difficult to automate and scrape. However, you can **GET** the URL in your browser without an issue. So I loaded up 10, found the results list and created the `file.json`.)
 
 ## Think about how you want your experience
 1. At first I thought, maybe it can **generate a table** of all the top schools - *this worked out fine*
