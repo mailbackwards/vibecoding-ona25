@@ -1,0 +1,87 @@
+Year,Storm Date,Name,Landfall,Winds,Category,Dead,Min Central Pressure
+1527,10/23,-,Mouth of MS,-,-,-,-
+1722,9/22-4,-,New Orleans,-,-,-,-
+1740,9/23,-,Mouth of MS,-,-,-,-
+1772,9/02,-,West of Mobile,-,-,-,-
+1776,,?,-,New Orleans,-,-,-
+1778,10/7-10,-,Mouth of MS,-,-,-,-
+1779,8/18,-,New Orleans,-,-,-,-
+1779,10/7-10,-,New Orleans,-,-,-,-
+1780,8/24,-,New Orleans,-,-,-,-
+1781,8/23,-,New Orleans,-,-,-,-
+1794,8/31,-,New Orleans,-,-,1+,-
+1800,8/?,-,New Orleans,-,-,-,-
+1811,,?,-,New Orleans,-,-,-
+1812,8/19-20,-,Isle Dernieres,-,-,45,-
+1813,8/19,-,N Gulf Coast,-,-,-,-
+1819,7/25-8,-,Bay St. Louis,-,-,43,-
+1821,9/15-7,-,Bay St. Louis,-,-,35,-
+1831,8/16,Great Barbados,Isle Dernieres,-,-,1500,-
+1837,10/5-7,Racer’s Storm,Cameron,-,-,105,-
+1846,4/03,Extratropical?,Mouth of MS,-,-,-,-
+1852,8/26,Number 1,"Pascagoula, MS",115,3,-,961
+1855,9/15-16,Number 5,Mouth of MS,125,3,-,-
+1856,8/10-2,Isle Dernieres,Isle Dernieres,150,4,200+,934
+1860,8/11,Number 1,SE Louisiana,125,3,47,-
+1860,9/14-5,Number 4,Mouth of MS,105,2,-,-
+1860,10/2-3,Number 6,Atchafalaya,105,2,13,-
+1865,9/12-3,Number 4,Johnson’s Bayou,105,2,23,-
+1866,7/12-13,Number 1,Louisiana Coast,105,2,-,-
+1867,10/3-4,Number 7,Venice,105,2,-,-
+1871,10/1-4,Number 7,"Galveston, TX",80,1,4,-
+1879,8/22-3,Number 3,High Island,105,2,2,964
+1879,9/01,Number 4,Morgan City,120,3,1,-
+1882,9/14,Number 3,Sabine Pass,105,2,-,-
+1886,6/13-4,Number 1,Sabine Pass,100,2,-,-
+1886,10/12,Number 10,Sabine Pass,120,3,110,-
+1887,10/16-9,Number 13,SE Louisiana,85,1,-,-
+1888,8/18-20,Number 3,SE Louisiana,110,2,-,-
+1893,9/6-8,Number 8,Morgan City,100,2,-,-
+1893,10/1-2,Number 10,Mouth of MS,130,3,2000,948
+1897,9/12,Number 2,Beaumont,85,1,-,-
+1900,9/7-8,Galveston HU,"Galveston, TX",145,4,0,936
+1901,8/14-5,Number 4,Grand Isle,90,2,10,973
+1906,9/26,Number 6,Pascagoula,110,2,-,958
+1909,7/21,Number 4,"Freeport, TX",115,3,2,959
+1909,9/20,Number 8,Thibodaux,120,3,353,952
+1915,8/15-7,Number 2,"Galveston, TX",130,3,-,940
+1915,9/29,Number 6,Lockport,130,3,275,944
+1916,10/18,Number 14,Pensacola,110,2,-,970
+1918,8/06,Number 1,Cameron,120,3,34,955
+1920,9/21-2,Number 2,Isles Dernieres,100,2,-,975
+1923,10/16,Number 7,Point Au Fer,80,1,-,983
+1926,8/25-7,Number 3,Houma,115,3,25,959
+1934,6/16,Number 2,Morgan City,80,1,7,966
+1938,8/14,Number 2,Cameron,75,1,1,1001
+1940,8/6-10,Number 2,Cameron,80,1,6,972
+1941,9/22-24,Number 2,"Texas City, TX",120,3,-,958
+1942,8/19-21,Number 1,"Galveston, TX",80,1,-,969
+1943,7/26-27,Number 1,"Galveston, TX",100,2,-,969
+1947,9/19,Number 4,New Orleans,80,1,51,966
+1948,9/3-4,Number 5,Timbalier Bay,80,1,-,989
+1956,9/24,Flossy,Grand Isle,100,2,8,980
+1957,6/27,Audrey,"Sabine Pass, TX",145,4,526,946
+1960,9/14,Ethel,Port Eads,90,1,-,981
+1961,9/11,Carla,Port Lavaca,145,4,39,931
+1964,10/3,Hilda,Salt Point,115,3,81,959
+1965,9/10,Betsy,Grand Isle,125,3,0,941
+1969,8/17-18,Camille,Pass Christian,190,5,-,909
+1971,9/16,Edith,Pecan Island,100,2,3,977
+1974,9/7-8,Carmen,Point Au Fer,120,3,3,937
+1977,9/6,Babe,Cailliou Bay,75,1,-,995
+1979,7/11,Bob,Terrebonne Bay,75,1,1,986
+1985,8/16,Danny,Pecan Island,90,1,0,988
+1985,9/02,Elena,Gulfport,115,3,19,959
+1985,10/29-31,Juan,Atchafalaya,85,1,-,971
+1986,6/26-7,Bonnie,"Sabine Pass, TX",85,1,1,992
+1988,9/09,Florence,Port Eads,75,1,-,988
+1992,8/26,Andrew,Atchafalaya,115,3,2+,955
+1995,10/04,Opal,"Pensacola, FL",115,3,0,942
+1997,7/18,Danny,Grand Isle,85,1,-,988
+1998,9/27-28,Georges,"Pascagoula, MS",110,2,2,987
+2002,10/03,Lili,Vermilion Bay,75,1,-,969
+2005,8/29,Katrina,Mouth of the MS,125,3,1577,923
+2005,9/24,Rita,Johnson’s Bayou,115,3,-,935
+2007,9/13,Humberto,Vinton,75,1,-,989
+2008,9/01,Gustav,Mouth of the MS,100,2,-,961
+2008,9/13,Ike,"Point Bolivar, TX",75,1,-,951
