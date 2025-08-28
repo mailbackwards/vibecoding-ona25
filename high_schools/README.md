@@ -1,4 +1,4 @@
-# Hello
+# Top High Schools Interactive
 
 This was an idea to show off how you can create new and unique experiences, doing reporting like you may already do, using LLMs and Vibe Coding.
 
