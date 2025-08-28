@@ -28,3 +28,7 @@ All states have top schools in the country, so using some methods you may know a
 - Think of a problem you want to solve. 
 - Look at pages on the internet for stories and look deeper at data sources.
 - Think about interactivity.
+
+## What you can do with this next?
+* There are endpoints to find the top colleges, business schools, law schools, etc.
+* Go find them and build your own thing 🙂
