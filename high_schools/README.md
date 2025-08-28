@@ -15,8 +15,8 @@ powers the top items in the feed... and see how there's page 1? I can paginate t
 * *Which is actually the next thing I did was paginate through the top 10 and pull the top 200 schools which is what you'll see today!*
 
 ## Think about how you want your experience
-1. At first I thought, maybe it can *generate a table* of all the top schools - *this worked out fine*
-2. I thought maybe I can get it to *make a map* - this *did not work* and mostly because the data did not give enough geographic information. City and state will typically not be enough to do that. 
+1. At first I thought, maybe it can **generate a table** of all the top schools - *this worked out fine*
+2. I thought maybe I can get it to **make a map** - this *did not work* and mostly because the data did not give enough geographic information. City and state will typically not be enough to do that. 
 ```"school": {
             "location": "Tucson, AZ",
             "profile_url": "https://www.usnews.com/education/best-high-schools/arizona/districts/basis-charter-schools-inc/basis-tucson-north-140137",
