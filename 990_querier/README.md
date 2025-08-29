@@ -93,11 +93,11 @@ It gave me some very ugly and broken dashboards! I kept asking for more but I co
 
 Hours later, I came back and started telling it "Let's start from scratch..." but didn't know where to start. Then I realized I had all the context I needed...from Part 1.
 
-I returned to ChatGPT and said:
+I returned to my ChatGPT conversation and said:
 
 > I have now downloaded this data and have the attached CSV. I'm trying to build a dashboard that allows me to query, filter, summarize, create charts, and detect patterns and outliers in this data. Help me craft a prompt for an app builder, such as Firebase Studio, to create such a dashboard.
 
-It gave me a [much more detailed prompt](firebase_prompt.md) than I would have ever constructed. I told Firebase "let's start over here" and pasted it in.
+It gave me a [much more detailed prompt](firebase_prompt.md) than I would have ever constructed. I told Firebase "let's start over" and pasted this in.
 
 Great success!
 
