@@ -89,8 +89,8 @@ _If you wanted_ to make a map, I think the best way would be to ask the LLM to g
 ## What you can do with this next?
 * There are endpoints to find the top colleges, business schools, law schools, etc. Oh look I shared a few!
 ```
-https://www.usnews.com/best-colleges/api/search?format=json&schoolType=regional-colleges-north&_sort=rank&_sortDirection=asc&
-https://www.usnews.com/best-colleges/api/search?format=json&schoolType=regional-colleges-south&_sort=rank&_sortDirection=asc&
+https://www.usnews.com/best-colleges/api/search?format=json&schoolType=regional-colleges-north&_sort=rank&_sortDirection=asc
+https://www.usnews.com/best-colleges/api/search?format=json&schoolType=regional-colleges-south&_sort=rank&_sortDirection=asc
 ```
 Look if I just take out schoolType... I get the top schools 🤓
 ```
