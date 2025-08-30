@@ -58,8 +58,14 @@ This powers the top items in for New York in the feed... and see how there's pag
 Using Firebase Studio I set up a project with all this information and gave it some direction. 
 
 1. At first I thought, maybe it could **make me a recommendation tool** where I put some infomration in. This it _evenutally_ got right, but not without a lot of tweaking. 
-2. Then I said maybe it can **generate a table** of all the top schools - *this worked out just fine*, but I told it to shove
-2. I thought maybe I can get it to **make a map and this did NOT work**. You're probably thinking "why not?!" and it's because especially for mapping, if there is not a lattiude and longitude in the data, maps will not work out great. Since I was going off data provided from the API, it only gave city, state as a data point. (example below)
+![alt text](hs_recommender.png "Recommendation tool!")
+
+2. Then I said maybe it can **generate a table** of all the top schools - *this worked out just fine*. One downside at one point it tried to make up images for each school that weren't in the JSON, that was not a good choice.
+![alt text](hs_table.png "Table of data")
+One thing it did well was make the "more infomration" buttons where it uses the actual data from the file.json to give you more facts about the school.
+![alt text](hs_info.png "Info within the table")
+
+3. I thought maybe I can get it to **make a map and this did NOT work**. You're probably thinking "why not?!" and it's because especially for mapping, if there is not a lattiude and longitude in the data, maps will not work out great. Since I was going off data provided from the API, it only gave city, state as a data point. (example below)
 ```"school": {
             "location": "Tucson, AZ",
             "profile_url": "https://www.usnews.com/education/best-high-schools/arizona/districts/basis-charter-schools-inc/basis-tucson-north-140137",
@@ -69,8 +75,11 @@ Using Firebase Studio I set up a project with all this information and gave it s
         },
 ```
 _If you wanted_ to make a map, I think the best way would be to ask the LLM to go find the addresses of every school in every location and then try to map it that way, but that still may not be as good as it should be.
-3. I tried asking for a heatmap of the US, counting map, all of them failed miserably. I got terrible looking images that were not maps at all.
-4. Then I asked for a brief article writing about __"describing the consistencies with the top 50 high schools and then broadly around the top 200 and what correlate to their sucess"__. The article reads very much like an LLM wrote it after many tries to reformat it. Does it give some useful information? Maybe.
+4. I tried asking for a heatmap of the US, counting map, all of them failed miserably. I got terrible looking images that were not maps at all.
+
+5. Then I asked for a brief article writing about __"describing the consistencies with the top 50 high schools and then broadly around the top 200 and what correlate to their sucess"__. The article reads very much like an LLM wrote it after many tries to reformat it. Does it give some useful information? Maybe.
+![alt text](hs_article.png "Article about all this")
+
 
 ## What you should learn
 - Center on a problem you want to solve. 
