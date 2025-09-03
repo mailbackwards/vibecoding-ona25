@@ -39,3 +39,7 @@ This is what I had as I was building the story and graphics
 > I am rewriting the text on the story page to adopt a more dramatic and urgent "Weather Channel" tone, emphasizing the imminent danger and historical devastation caused by hurricanes.
 
 ![alt text](2_weather_channel_prompt.png "Now written like the weather channel")
+
+### Then we thought, let's take the survival parts and make a quiz to help people learn preparedness
+It also is written in a way that is more threatening, but trying to present an interactive game way.
+![alt text](beat_the_clock.png "Our game, beat the clock!")
