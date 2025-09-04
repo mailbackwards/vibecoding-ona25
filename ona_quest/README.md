@@ -1,5 +1,7 @@
 # ONA Quest
 
+### Background
+
 My goal here was to experiment with a longer-form game, as well as to try making a [Claude Artifact](https://madewithclaude.com/) with the help of a CLAUDE.md file.
 
 CLAUDE.md is a persistent resource intended for use with Claude Code, but it's a trick that can work anywhere: like a style guide for code, you can instruct it to "Research and plan before implementing" or "Don't spiral into complex solutions". I kept it simple and found a decent-looking [CLAUDE.md file](CLAUDE.md) on the web.
@@ -8,6 +10,8 @@ Since we're all going to New Orleans, I decided to make a game out of attending 
 
 - [The project](https://claude.ai/public/artifacts/59fc25f7-10e2-4882-8c52-5ae9dbc9f824)
 - [The source code](ona25-itinerary-builder.tsx)
+
+### Instructions
 
 My original prompt:
 
@@ -31,14 +35,18 @@ The result is not a complete game, but a fun proof-of-concept, with more fun enh
 
 > Let's add some more complexity now. Make sure it's going across multiple days (kickoff is on Wednesday evening, and it should go through all day Thursday and Friday). Include lunch, networking opportunities, evening dinners and mixers, and getting a good night's rest. All of this is important in order to win the quest!
 
-And one key addition:
+### Don't forget
+
+A breakthrough was adding one key addition, that I should have tried more during the process.
 
 > Is there anything else you would suggest before we move forward with this?
 
 It gave me some great ideas: including New Orleans-specific elements, enhancing risk/reward mechanics, and more.
 
-At all points, I kept saying:
+And all points, I kept saying:
 
 > Keep referring to the CLAUDE.md file attached here for best practices on building.
 
-I can't tell how much this helped without doing deeper evaluations, but I'm confident that it didn't hurt! Especially as a project gets bigger and bigger, such a "code style guide" makes sure that it stays on track. [Try the game here](https://claude.ai/public/artifacts/59fc25f7-10e2-4882-8c52-5ae9dbc9f824).
+I can't tell how much this helped without doing deeper evaluations, but I'm confident that it didn't hurt! Especially as a project gets bigger and bigger, such a "code style guide" makes sure that it stays on track.
+
+[Try the game here](https://claude.ai/public/artifacts/59fc25f7-10e2-4882-8c52-5ae9dbc9f824).
