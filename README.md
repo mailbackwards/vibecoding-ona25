@@ -42,6 +42,7 @@ We've taken what we've learned and built stuff for you already so you can see ho
 - [Weather data](weather_data) - Take a PDF report from NOAA on Louisiana's history of Hurricanes and turn it into a story, graphics and a game.
 - [990 querier](990_querier) - How to create a script that will create a data viz for any 990s
 - [High schools](high_schools) - How to turn data from US News & World Report's top high schools into interactive graphics and games people can use.
+- [ONA Quest](ona_quest) - How to make a fun interactive game using Claude Artifacts.
 
 ### Scenario Enactment
 - Try these or think of your own ideas with these in mind?
