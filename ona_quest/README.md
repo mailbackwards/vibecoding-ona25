@@ -2,7 +2,7 @@
 
 ### Background
 
-My goal here was to experiment with a longer-form game, as well as to try making a [Claude Artifact](https://madewithclaude.com/) with the help of a CLAUDE.md file.
+My goal was to experiment with a longer-form game, as well as to try making a [Claude Artifact](https://madewithclaude.com/) with the help of a CLAUDE.md file.
 
 CLAUDE.md is a persistent resource intended for use with Claude Code, but it's a trick that can work anywhere: like a style guide for code, you can instruct it to "Research and plan before implementing" or "Don't spiral into complex solutions". I kept it simple and found a decent-looking [CLAUDE.md file](CLAUDE.md) on the web.
 
@@ -10,6 +10,8 @@ Since we're all going to New Orleans, I decided to make a game out of attending 
 
 - [The project](https://claude.ai/public/artifacts/59fc25f7-10e2-4882-8c52-5ae9dbc9f824)
 - [The source code](ona25-itinerary-builder.tsx)
+
+![A screenshot of the latest version of ONA Quest](intro_screenshot.jpg)
 
 ### Instructions
 
