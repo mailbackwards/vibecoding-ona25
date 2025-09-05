@@ -16,12 +16,12 @@ A workshop for [ONA25](https://ona25.journalists.org/) by [Liam Andrew](https://
 Here's (roughly) how we'll spend the next 90 minutes.
 
 - **Account onboarding** (10 mins)
-- **Presentation** ([see below](#presentation) — 10 mins)
-- **Scenario and tool introductions** (10 mins)
+- [**Presentation**](#presentation) (10 mins)
+- [**Scenario demos**](#scenarios) and tool introductions** (10 mins)
 - **Hands-on building!** (60 mins)
   - Scenario enactment
   - Scenario enhancement
-- **Sharing**, **brainstorm** and **next steps** (30 mins)
+- [**Sharing**](#show-and-tell), **brainstorm** and **next steps** (30 mins)
 
 That's *not a lot of build time*. If you leave with a copy of a scenario and a half-baked idea of what to try next, **that's success**.
 
@@ -42,8 +42,8 @@ Coined by [Andrej Karpathy](https://x.com/karpathy/status/1886192184808149383):
 And in a follow-up...
 
 > Personally I use "vibe coding" when I feel like this dog.
->
-> ![I have no idea what I'm doing dog](https://static.simonwillison.net/static/2025/vibe-coding.gif)
+
+![I have no idea what I'm doing dog](https://static.simonwillison.net/static/2025/vibe-coding.gif)
 
 ### What is it good for?
 
@@ -130,7 +130,7 @@ Worst case, you might need to dive into the code, or roll back to a version that
 
 #### Be smart with your workflows
 
-- Save versions as you go. Once you like what you've got, make a copy before you keep building up on it.
+- Save versions as you go. Once you like what you've got, make a copy before you keep building.
 - Constrain complexity. Pick one thing to get working at a time, then add polish.
 
 _______
